@@ -36,7 +36,7 @@ export function fetchCountries() {
     })
     .then(data => {
         if (data.length > 10) {
-          
+          ul.innerHTML = ''
         Notiflix.Notify.failure('Слишком много совпадений');
         } else if (data.length === 1) {
             
@@ -51,6 +51,9 @@ export function fetchCountries() {
           countriesArr.push(element);
         }
         renderCountries();
+        } else  {
+            ul.innerHTML = '';
+            div.innerHTML = '';
       }
     })
     .catch(error => {
@@ -88,7 +91,7 @@ function render() {
 
       ul.innerHTML = '';
      div.insertAdjacentHTML('beforeend', markup);
-    //    div.innerHTML = markup;
+    //   div.innerHTML = markup;
   }
 }
 
@@ -101,7 +104,7 @@ function renderCountries() {
   </li>`;
       
       div.innerHTML = '';
-      ul.insertAdjacentHTML('beforeend', markupCountries);
-    //   ul.innerHTML = markupCountries;
+    ul.insertAdjacentHTML('beforeend', markupCountries);
+   //   ul.innerHTML = markupCountries;
   }
 }
