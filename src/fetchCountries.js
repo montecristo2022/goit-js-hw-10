@@ -1,13 +1,6 @@
- import './css/styles.css';
-
-// import { fetchCountries } from './fetchCountries'
-
-
-
-
 import Notiflix from 'notiflix';
 import debounce from 'lodash.debounce';
-
+import './css/styles.css';
 
 const input = document.querySelector('#search-box');
 const ul = document.querySelector('.country-list');
@@ -35,18 +28,15 @@ export function fetchCountries() {
       return response.json();
     })
     .then(data => {
-        if (data.length > 10) {
-          
+      if (data.length > 10) {
         Notiflix.Notify.failure('Слишком много совпадений');
-        } else if (data.length === 1) {
-            
+      } else if (data.length === 1) {
         console.log(data);
         for (const el of data) {
           arr.push(el);
           render();
         }
-        } else if (data.length > 1 && data.length < 10) {
-           
+      } else if (data.length > 1 && data.length < 10) {
         for (const element of data) {
           countriesArr.push(element);
         }
@@ -88,7 +78,7 @@ function render() {
 
       ul.innerHTML = '';
      div.insertAdjacentHTML('beforeend', markup);
-    //    div.innerHTML = markup;
+    //   div.innerHTML = markup;
   }
 }
 
