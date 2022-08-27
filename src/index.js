@@ -13,16 +13,14 @@ const input = document.querySelector('#search-box');
 const ul = document.querySelector('.country-list');
 const div = document.querySelector('.country-info');
 const DEBOUNCE_DELAY = 1000;
-const arr = [];
-const countriesArr = [];
+
 
 input.addEventListener('input', debounce(fetchCountries, DEBOUNCE_DELAY));
 
-export function fetchCountries() {
+ function fetchCountries() {
   const inputValue = input.value.trim();
     console.log(inputValue);
-    
-    
+    cleanPage()
 
   fetch(
     `https://restcountries.com/v3.1/name/${inputValue}?fields=name,capital,population,flags,languages`
@@ -36,25 +34,17 @@ export function fetchCountries() {
     })
     .then(data => {
         if (data.length > 10) {
-          ul.innerHTML = ''
-        Notiflix.Notify.failure('Слишком много совпадений');
-        } else if (data.length === 1) {
-            
-        console.log(data);
-        for (const el of data) {
-          arr.push(el);
-          render();
-        }
-        } else if (data.length > 1 && data.length < 10) {
+       
+        Notiflix.Notify.warning('Слишком много совпадений');
+        } if (data.length === 1) {   
+      
+          render(data);
+        
+        } if (data.length > 1 && data.length < 10) {
            
-        for (const element of data) {
-          countriesArr.push(element);
-        }
-        renderCountries();
-        } else  {
-            ul.innerHTML = '';
-            div.innerHTML = '';
-      }
+        
+        renderCountries(data);
+        } 
     })
     .catch(error => {
       Notiflix.Notify.failure(
@@ -63,48 +53,68 @@ export function fetchCountries() {
       console.log(error);
     });
 
-    if (inputValue === '') {
-        div.innerHTML = '';
-        ul.innerHTML = '';
-    }
+   
 }
 
-function render() {
-  for (const element of arr) {
-      const markup = `<ul >
+
+
+
+function render(oneCountry) {
+  const markup = oneCountry
+    .map(country => {
+      
+
+  
+
+      return `<ul >
     <h1 class="county">
-    <img class="image" src=${element.flags.svg} width="40" heigh="20"/>
-    <p>${element.name.common}</p>
+    <img class="image" src=${country.flags.svg} width="40" heigh="20"/>
+    <p>${country.name.official}</p>
   </h1>
   <li>
-    <p> Население страны: ${element.population}</p>
+    <p> Население страны: ${country.population}</p>
   </li>
   <li>
-    <p> Cтолица: ${element.capital}</p>
+    <p> Cтолица: ${country.capital}</p>
   </li>
   <li>
-    <p> Язык(и): ${Object.values(element.languages)}</p>
+    <p> Язык(и): ${Object.values(country.languages)}</p>
   </li>
 </ul>`;
 
   
 
-      ul.innerHTML = '';
+  
+    })
+    .join('');
+    
      div.insertAdjacentHTML('beforeend', markup);
-    //   div.innerHTML = markup;
-  }
+ 
+
 }
 
-function renderCountries() {
-  for (const element of countriesArr) {
-    const markupCountries = `<ul >
-  <li class="county">
-    <img class="image" src=${element.flags.svg} width="40" heigh="20"/>
-    <p>${element.name.common}</p>
-  </li>`;
-      
-      div.innerHTML = '';
-    ul.insertAdjacentHTML('beforeend', markupCountries);
-   //   ul.innerHTML = markupCountries;
-  }
+
+
+
+
+
+function renderCountries(countries) {
+  const smallMarkup = countries
+    .map(
+      country =>
+        `<li class="country">
+          <img class="image" src="${country.flags.svg}" alt="flag" width="40px" height="20px"/>
+          <p class="country-name">${country.name.official}</p>
+        </li>`
+    )
+    .join('');
+
+ 
+    ul.insertAdjacentHTML('beforeend', smallMarkup);
+}
+
+
+function cleanPage() {
+  div.innerHTML = '';
+        ul.innerHTML = '';
 }
